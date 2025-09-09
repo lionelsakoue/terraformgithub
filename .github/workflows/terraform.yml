@@ -79,4 +79,9 @@ jobs:
         run: terraform plan
 
       - name: Run Terraform
-        run: terraform ${{ github.event.inputs.action }} -auto-approve
+        run: |
+          if [ "${{ github.event.inputs.action }}" = "plan" ]; then
+            terraform plan
+          else
+            terraform ${{ github.event.inputs.action }} -auto-approve
+          fi
