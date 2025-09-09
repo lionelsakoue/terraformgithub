@@ -45,38 +45,38 @@
 name: creating vm using github action
 
 on:
-  # push:
-  #   branches:
-  #     - main
   workflow_dispatch:
+    inputs:
+      action:
+        description: "Terraform action"
+        required: true
+        # default: "apply"   # default is apply
+        type: choice
+        options:
+          - plan
+          - apply
+          - destroy
 
 jobs:
   terraform:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout your repo code
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # Step 2: Set up Google Cloud auth using service account key
       - name: Authenticate to GCP
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-      # Step 3: Set up Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      # Step 4: Terraform Init
       - name: Terraform Init
         run: terraform init
 
-      # Step 5: Terraform Plan
       - name: Terraform Plan
         run: terraform plan
 
-      # Step 6: Terraform Apply (auto-approve so no manual confirmation)
-      - name: Terraform Apply
-        run: terraform apply -auto-approve
+      - name: Run Terraform
+        run: terraform ${{ github.event.inputs.action }} -auto-approve
