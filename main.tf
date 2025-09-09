@@ -33,8 +33,4 @@ resource "google_compute_instance" "ubuntu_vm" {
       # This gives the VM a public IP
     }
   }
-
-  metadata = {
-    ssh-keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
-  }
 }
