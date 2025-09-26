@@ -1,5 +1,5 @@
 module "cluster" {
-  source       = "./modules/cluster"
+  source       = "../modules/cluster"
   project_id   = var.project_id
   region       = var.region
   zone         = var.zone
@@ -7,13 +7,13 @@ module "cluster" {
 }
 
 module "asm" {
-  source        = "./modules/asm"
+  source        = "../modules/asm"
   namespace     = "istio-system"
   istio_version = "1.22.0"
 }
 
 module "ingress" {
-  source     = "./modules/ingress"
+  source     = "../modules/ingress"
   cluster_name = module.cluster.cluster_name
   namespace    = "istio-system"
 }
