@@ -71,20 +71,16 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
-
-      # Step 3: Setup Terraform
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      # Step 4: Terraform Init
+      
+            # Step 3: Setup Terraform
       - name: Terraform Init
         run: terraform init
-
-      # Step 5: Terraform Plan
+        working-directory: terraform-gke-asm
+      
       - name: Terraform Plan
         run: terraform plan
-
-      # Step 6: Terraform Apply/Destroy
+        working-directory: terraform-gke-asm
+      
       - name: Terraform Action
         run: |
           if [ "${{ github.event.inputs.action }}" = "apply" ]; then
@@ -94,3 +90,5 @@ jobs:
           else
             terraform plan
           fi
+        working-directory: terraform-gke-asm
+      
