@@ -66,21 +66,40 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Step 2: Authenticate to GCP
+      # Step 2: Install gcloud SDK (needed for gke_ready check)
+      - name: Install gcloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: practice-422202
+          install_components: gke-gcloud-auth-plugin
+
+      # Step 3: Authenticate to GCP
       - name: Authenticate to GCP
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
-      
-            # Step 3: Setup Terraform
+
+      # Step 4: Install kubectl (needed for readiness check)
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: 'latest'
+
+      # Step 5: Setup Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      # Step 6: Terraform Init
       - name: Terraform Init
         run: terraform init
         working-directory: terraform-gke-asm
-      
+
+      # Step 7: Terraform Plan
       - name: Terraform Plan
         run: terraform plan
         working-directory: terraform-gke-asm
-      
+
+      # Step 8: Terraform Apply/Destroy
       - name: Terraform Action
         run: |
           if [ "${{ github.event.inputs.action }}" = "apply" ]; then
@@ -91,4 +110,3 @@ jobs:
             terraform plan
           fi
         working-directory: terraform-gke-asm
-      
