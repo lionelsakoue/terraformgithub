@@ -10,7 +10,3 @@ resource "google_container_cluster" "primary" {
     oauth_scopes = ["https://www.googleapis.com/auth/cloud-platform"]
   }
 }
-
-output "cluster_id" {
-  value = google_container_cluster.primary.id
-}
