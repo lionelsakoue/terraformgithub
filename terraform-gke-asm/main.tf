@@ -16,8 +16,9 @@ module "ingress" {
   source        = "git::https://github.com/lionelsakoue/gke-module.git//modules/ingress?ref=master"
   namespace     = var.namespace
   istio_version = var.istio_version
-  depends_on    = [module.asm]
+  depends_on    = [module.asm] # already there, keep it
 }
+
 
 # Root-level outputs
 output "cluster_name" {
