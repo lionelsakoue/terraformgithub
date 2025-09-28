@@ -34,9 +34,10 @@ provider "kubernetes" {
 
 # Helm provider (to install Istio/Ingress Gateways)
 provider "helm" {
-  kubernetes {
+  kubernetes = {
     host                   = "https://${module.cluster.cluster_endpoint}"
     cluster_ca_certificate = base64decode(module.cluster.cluster_ca_certificate)
     token                  = data.google_client_config.default.access_token
   }
 }
+
