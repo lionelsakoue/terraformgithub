@@ -50,7 +50,7 @@ on:
       action:
         description: "Terraform action"
         required: true
-        default: "chose below"
+        default: ""
         type: choice
         options:
           - plan
