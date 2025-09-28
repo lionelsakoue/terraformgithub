@@ -18,3 +18,10 @@ variable "cluster_name" {
   description = "Name of the GKE cluster"
   default     = "gke-asm-cluster"
 }
+
+variable "namespace" {
+  type        = string
+  description = "Namespace for Istio control plane"
+  default     = "istio-system"
+  
+}
