@@ -25,3 +25,10 @@ variable "namespace" {
   default     = "istio-system"
   
 }
+
+variable "istio_version" {
+  type        = string
+  description = "Version of Istio to install"
+  default     = "1.24.2"
+  
+}
