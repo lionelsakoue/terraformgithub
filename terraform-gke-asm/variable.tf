@@ -1,34 +1,32 @@
 variable "project_id" {
-  type        = string
   description = "GCP Project ID"
+  type        = string
 }
 
 variable "region" {
+  description = "GCP Region"
   type        = string
-  description = "Region for the cluster"
-}
-
-variable "zone" {
-  type        = string
-  description = "Zone for the cluster"
 }
 
 variable "cluster_name" {
+  description = "GKE Cluster Name"
   type        = string
-  description = "Name of the GKE cluster"
-  default     = "gke-asm-cluster"
 }
 
-variable "namespace" {
+variable "machine_type" {
+  description = "Node machine type"
   type        = string
-  description = "Namespace for Istio control plane"
-  default     = "istio-system"
-  
+  default     = "e2-standard-8"
 }
 
-variable "istio_version" {
+variable "node_count" {
+  description = "Number of nodes per zone"
+  type        = number
+  default     = 1
+}
+
+variable "kubernetes_version" {
+  description = "GKE Kubernetes version"
   type        = string
-  description = "Version of Istio to install"
-  default     = "1.24.2"
-  
+  default     = "latest"
 }

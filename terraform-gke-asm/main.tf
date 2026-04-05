@@ -1,34 +1,54 @@
-module "cluster" {
-  source       = "git::https://github.com/lionelsakoue/gke-module.git//modules/cluster?ref=master"
-  project_id   = var.project_id
-  region       = var.region
-  zone         = var.zone
-  cluster_name = var.cluster_name
+resource "google_container_cluster" "primary" {
+  name     = var.cluster_name
+  location = var.region
+
+  # Regional cluster = HA control plane across 3 zones
+  node_locations = [
+    "${var.region}-a",
+    "${var.region}-b",
+    "${var.region}-c"
+  ]
+
+  # Remove default node pool — we manage our own
+  remove_default_node_pool = true
+  initial_node_count       = 1
+
+  min_master_version = var.kubernetes_version
+
+  network    = "default"
+  subnetwork = "default"
+
+  logging_service    = "logging.googleapis.com/kubernetes"
+  monitoring_service = "monitoring.googleapis.com/kubernetes"
 }
 
-module "asm" {
-  source        = "git::https://github.com/lionelsakoue/gke-module.git//modules/asm?ref=master"
-  namespace     = var.namespace
-  istio_version = var.istio_version
-}
+resource "google_container_node_pool" "primary_nodes" {
+  name       = "${var.cluster_name}-node-pool"
+  location   = var.region
+  cluster    = google_container_cluster.primary.name
+  node_count = var.node_count
 
-module "ingress" {
-  source        = "git::https://github.com/lionelsakoue/gke-module.git//modules/ingress?ref=master"
-  namespace     = var.namespace
-  istio_version = var.istio_version
-  depends_on    = [module.asm] # already there, keep it
-}
+  node_config {
+    machine_type = var.machine_type
+    disk_size_gb = 100
+    disk_type    = "pd-standard"
 
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ]
 
-# Root-level outputs
-output "cluster_name" {
-  value = module.cluster.cluster_name
-}
+    metadata = {
+      disable-legacy-endpoints = "true"
+    }
 
-output "asm_status" {
-  value = module.asm.istiod_status
-}
+    labels = {
+      env     = "dev"
+      cluster = var.cluster_name
+    }
+  }
 
-output "ingress_status" {
-  value = module.ingress.ingress_gateway_status
+  management {
+    auto_repair  = true
+    auto_upgrade = true
+  }
 }
