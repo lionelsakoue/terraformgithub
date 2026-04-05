@@ -5,7 +5,7 @@ data "google_secret_manager_secret_version" "github_token" {
 }
 
 # 🔥 Kubernetes secret for Config Sync
-resource "kubernetes_secret" "git_creds" {
+resource "kubernetes_secret_v1" "git_creds" {
   metadata {
     name      = "git-creds"
     namespace = "config-management-system"
