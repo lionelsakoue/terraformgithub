@@ -50,6 +50,7 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan
+        working-directory: config-synch
 
       - name: Terraform Action
         run: |
