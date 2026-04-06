@@ -1,4 +1,4 @@
-name: Terraform Workflow-config-synch
+name: Terraform Workflow-config-acm-fix
 
 on:
   workflow_dispatch:
